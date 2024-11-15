@@ -1,68 +1,43 @@
-data Fruct
-  = Mar String Bool
-  | Portocala String Int
+-- PF2024-Lab6.hs
 
-ionatanFaraVierme = Mar "Ionatan" False
-goldenCuVierme = Mar "Golden Delicious" True
-portocalaSicilia10 = Portocala "Sanguinello" 10
-listaFructe = [Mar "Ionatan" False,
-                Portocala "Sanguinello" 10,
-                Portocala "Valencia" 22,
-                Mar "Golden Delicious" True,
-                Portocala "Sanguinello" 15,
-                Portocala "Moro" 12,
-                Portocala "Tarocco" 3,
-                Portocala "Moro" 12,
-                Portocala "Valencia" 2,
-                Mar "Golden Delicious" False,
-                Mar "Golden" False,
-                Mar "Golden" True]
+-- 1. Fructe
+data Fruct = Mar String Bool | Portocala String Int
 
 ePortocalaDeSicilia :: Fruct -> Bool
-ePortocalaDeSicilia = undefined
-test_ePortocalaDeSicilia1 =
-    ePortocalaDeSicilia (Portocala "Moro" 12) == True
-test_ePortocalaDeSicilia2 =
-    ePortocalaDeSicilia (Mar "Ionatan" True) == False
+ePortocalaDeSicilia (Portocala soi _) = soi `elem` ["Tarocco", "Moro", "Sanguinello"]
+ePortocalaDeSicilia _ = False
 
 nrFeliiSicilia :: [Fruct] -> Int
-nrFeliiSicilia = undefined
-
-test_nrFeliiSicilia = nrFeliiSicilia listaFructe == 52
+nrFeliiSicilia = foldr (\fruct acc -> case fruct of
+    Portocala soi nrFelii | ePortocalaDeSicilia (Portocala soi nrFelii) -> acc + nrFelii
+    _ -> acc) 0
 
 nrMereViermi :: [Fruct] -> Int
-nrMereViermi = undefined
+nrMereViermi = foldr (\fruct acc -> case fruct of
+    Mar _ True -> acc + 1
+    _ -> acc) 0
 
-test_nrMereViermi = nrMereViermi listaFructe == 2
-
-type NumeA = String
-type Rasa = String
-data Animal = Pisica NumeA | Caine NumeA Rasa
-    deriving Show
+-- 2. Animale
+data Animal = Pisica String | Caine String String deriving Show
 
 vorbeste :: Animal -> String
-vorbeste = undefined
+vorbeste (Pisica _) = "Meow!"
+vorbeste (Caine _ _) = "Woof!"
 
 rasa :: Animal -> Maybe String
-rasa = undefined
+rasa (Caine _ r) = Just r
+rasa (Pisica _) = Nothing
 
-data Linie = L [Int]
-   deriving Show
-data Matrice = M [Linie]
-   deriving Show
+-- 3. Matrice
+data Linie = L [Int] deriving Show
+data Matrice = M [Linie] deriving Show
 
 verifica :: Matrice -> Int -> Bool
-verifica = undefined
-test_verif1 = verifica (M[L[1,2,3], L[4,5], L[2,3,6,8], L[8,5,3]]) 10 == False
-test_verif2 = verifica (M[L[2,20,3], L[4,21], L[2,3,6,8,6], L[8,5,3,9]]) 25 == True
+verifica (M linii) n = all (\(L linie) -> sum linie == n) linii
+
 doarPozN :: Matrice -> Int -> Bool
-doarPozN = undefined
+doarPozN (M linii) n = all (\(L linie) -> length linie == n && all (> 0) linie) linii
 
-testPoz1 = doarPozN (M [L[1,2,3], L[4,5], L[2,3,6,8], L[8,5,3]]) 3 == True
-
-testPoz2 = doarPozN (M [L[1,2,-3], L[4,5], L[2,3,6,8], L[8,5,3]]) 3 == False
 corect :: Matrice -> Bool
-corect = undefined
-
-testcorect1 = corect (M[L[1,2,3], L[4,5], L[2,3,6,8], L[8,5,3]]) == False
-testcorect2 = corect (M[L[1,2,3], L[4,5,8], L[3,6,8], L[8,5,3]]) == True
+corect (M []) = True
+corect (M (L l:ls)) = all (\(L linie) -> length linie == length l) ls
