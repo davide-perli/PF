@@ -97,7 +97,7 @@ toList (BNode left _ Nothing right) = toList left ++ toList right
 
 
 fromList :: [(Int, value)] -> IntSearchTree value
-fromList = foldr (\(key, val) acc -> insert key val acc) Empty
+fromList list = foldr (\(key, val) acc -> insert key val acc) Empty list
 
 
 printTree :: IntSearchTree value -> String
