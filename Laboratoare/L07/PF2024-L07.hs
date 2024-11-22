@@ -106,5 +106,6 @@ printTree (BNode left key _ right) =
   "(" ++ printTree left ++ ")" ++ show key ++ "(" ++ printTree right ++ ")"
 
 
--- balance :: IntSearchTree value -> IntSearchTree value
--- balance = undefined
+-- Funcția balance care echilibrează arborele binar de căutare
+balance :: IntSearchTree value -> IntSearchTree value
+balance tree = buildBalanced (toList tree)
